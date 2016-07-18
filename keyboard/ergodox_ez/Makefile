@@ -31,15 +31,14 @@ SRC = ergodox_ez.c \
 	  matrix.c
 
 ifdef KEYMAP
-    SRC := keymaps/keymap_$(KEYMAP).c $(SRC)
+    SRC := keymaps/$(KEYMAP)/keymap.c $(SRC)
 else
-    SRC := keymaps/keymap_default.c $(SRC)
+    SRC := keymaps/default/keymap.c $(SRC)
 endif
 
 CONFIG_H = config.h
 
 # MCU name
-#MCU = at90usb1287
 MCU = atmega32u4
 
 # Processor frequency.
@@ -94,13 +93,29 @@ OPT_DEFS += -DBOOTLOADER_SIZE=512
 BOOTMAGIC_ENABLE = yes # Virtual DIP switch configuration(+1000)
 MOUSEKEY_ENABLE  = yes # Mouse keys(+4700)
 EXTRAKEY_ENABLE  = yes # Audio control and System control(+450)
-CONSOLE_ENABLE   = yes # Console for debug(+400)
-COMMAND_ENABLE   = yes # Commands for debug and configuration
+# CONSOLE_ENABLE   = yes # Console for debug(+400)
+COMMAND_ENABLE   = no # Commands for debug and configuration
 CUSTOM_MATRIX    = yes # Custom matrix file for the ErgoDox EZ
 SLEEP_LED_ENABLE = yes  # Breathing sleep LED during USB suspend
 NKRO_ENABLE      = yes		# USB Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 # MIDI_ENABLE    = yes 		# MIDI controls
-# uNICODE_ENABLE = yes 		# Unicode
+# UNICODE_ENABLE = yes 		# Unicode
+
+# If you want to have your own config_user.h, you can just put it in
+# your keymap directory. Anything you set there will take precedence
+# over the global config.h.
+ifneq ("$(wildcard keymaps/$(KEYMAP)/config_user.h)","")
+CONFIG_USER_H = keymaps/$(KEYMAP)/config_user.h
+endif
+
+ifdef KEYMAP
+
+ifeq ("$(wildcard keymaps/$(KEYMAP).c)","")
+ifneq ("$(wildcard keymaps/$(KEYMAP)/makefile.mk)","")
+	include keymaps/$(KEYMAP)/makefile.mk
+endif
+endif
+endif
 
 
 # Optimize size but this may cause error "relocation truncated to fit"

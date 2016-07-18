@@ -1,13 +1,9 @@
 #ifndef ERGODOX_EZ_H
 #define ERGODOX_EZ_H
 
-#include "matrix.h"
-#include "keymap_common.h"
-#include "backlight.h"
-#include <stddef.h>
+#include "quantum.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include <avr/io.h>
 #include "i2cmaster.h"
 #include <util/delay.h>
 
@@ -123,8 +119,8 @@ inline void ergodox_led_all_set(uint8_t n)
     { k0D, k1D, k2D, k3D, k4D, KC_NO }    \
    }
 
-void * matrix_init_user(void);
-void * matrix_scan_user(void);
+void matrix_init_user(void);
+void matrix_scan_user(void);
 
 
 
